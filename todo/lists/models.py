@@ -16,7 +16,7 @@ class Task(models.Model):
     completed = models.BooleanField(default=False)
 
 
-    lists = models.ForeignKey('lists.List',
+    todo_list = models.ForeignKey('lists.List',
                             on_delete=models.CASCADE,
                             related_name='tasks')
 

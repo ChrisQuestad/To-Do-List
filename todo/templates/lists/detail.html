@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block title %} {{list.title}} {% endblock %}
+
+{% block content %}
+<h1>{{ list.title }}</h1>
+
+<div>
+  <a href="{% url 'lists:task-create' list_pk=list.pk %}">
+    <button>Add Task!</button>
+  </a>
+</div>
+
+{% for task in list.tasks.all %}
+  <h4>
+    {{ task.task }}
+    {{ task.due_date }}
+    <form method="POST" action="{% url 'lists:task-delete' list_pk=list.pk pk=task.pk  %}">
+      {% csrf_token %}
+      <button>Delete</button>
+    </form>
+
+  </h4>
+{% empty %}
+  <h4>No tasks yet!</h4>
+{% endfor %}
+
+{% endblock %}

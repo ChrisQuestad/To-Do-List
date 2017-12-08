@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %}My ToDo | Home{% endblock %}
+
+{% block content %}
+<h1>Hello!</h1>
+<div>
+  <p>
+    <a href="{% url 'lists:create' %}"><button>Create A List!</button></a>
+  </p>
+    <div id="lists">
+      {% for list in lists %}
+        <h3>
+          <a href="{% url 'lists:detail' pk=list.pk %}">{{ list.title }}</a>
+          <form method="POST" action="{% url 'lists:delete' pk=list.pk  %}">
+            {% csrf_token %}
+            <button>Delete</button>
+          </form>
+        </h3>
+      {% empty %}
+        <p>
+          You have no Lists!
+        </p>
+        {% endfor %}
+    </div>
+  </div>
+{% endblock %}
