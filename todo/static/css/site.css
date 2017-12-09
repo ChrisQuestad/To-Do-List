@@ -8,3 +8,7 @@ html, body {
 
   background-color: tomato;
 }
+
+.checked {
+  text-decoration: line-through;
+}

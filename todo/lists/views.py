@@ -33,9 +33,10 @@ class ListUpdateView(View):
         return render(request, self.template_name, {'form': form})
 
     def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
+        model = List.objects.get(pk=self.kwargs['pk'])
+        form = self.form_class(request.POST, instance=model)
         if form.is_valid():
-            model = form.save()
+            form.save()
             return redirect('lists:detail', pk=model.pk)
 
         return render(request, self.template_name, {'form': form})
@@ -74,9 +75,8 @@ class ListCreateView(View):
 class TaskDeleteView(View):
     def post(self,request, *args, **kwargs):
         model = Task.objects.get(pk=self.kwargs['pk'])
-        if request.method =='POST':
-            model.delete()
-            return redirect('lists:detail, pk=lists.pk')
+        model.delete()
+        return redirect('lists:detail', pk=self.kwargs['list_pk'])
 
 class TaskCreateView(View):
     form_class = TaskForm
@@ -102,19 +102,8 @@ class TaskCreateView(View):
         return render(request, self.template_name, {'form': form})
 
 class TaskUpdateView(View):
-    form_class = TaskForm
-    template_name = 'tasks/update.html'
-
-    def get(self, request, *args, **kwargs):
-        model = Task.objects.get(pk=self.kwargs['pk'])
-        form = self.form_class(instance=model)
-
-        return render(request, self.template_name, {'form': form})
-
     def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            model = form.save()
-            return redirect('task:detail', pk=model.pk)
-
-        return render(request, self.template_name, {'form': form})
+        model = Task.objects.get(pk=self.kwargs['pk'])
+        model.completed = not model.completed
+        model.save()
+        return redirect('lists:detail', pk=self.kwargs['list_pk'])
